@@ -1,0 +1,41 @@
+import random
+def partition(arr, low, high):
+    """
+    Процедура разделения (partition) по схеме Lomuto.
+    """
+    pivot = arr[high]
+    i = low - 1
+    for j in range(low, high):
+        if arr[j] <= pivot:
+            i += 1
+            arr[i], arr[j] = arr[j], arr[i]
+    arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    return i + 1
+def quick_select(arr, k):
+    """
+    Возвращает k-й наименьший элемент массива (k начинается с 0).
+    Алгоритм не сортирует весь массив, а рекурсирует
+    только в одну часть массива.
+    """
+    def select(low, high):
+        # Если в массиве один элемент — он и есть ответ
+        if low == high:
+            return arr[low]
+     
+        # Случайный выбор pivot
+        random_index = random.randint(low, high)
+        arr[random_index], arr[high] = arr[high], arr[random_index]
+        # Разделение массива
+        pivot_index = partition(arr, low, high)
+        # Если pivot оказался на позиции k — нашли элемент
+        if pivot_index == k:
+            return arr[pivot_index]
+        # Если k меньше позиции pivot —
+        # рекурсируем только в левую часть
+        elif k < pivot_index:
+            return select(low, pivot_index - 1)
+        # Если k больше позиции pivot —
+        # рекурсируем только в правую часть
+        else:
+            return select(pivot_index + 1, high)
+    return select(0, len(arr) - 1)
