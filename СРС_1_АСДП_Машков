@@ -1,0 +1,52 @@
+import time
+import random
+import matplotlib.pyplot as plt
+# --- Алгоритмы ---
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if arr[j] > arr[j + 1]:
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+def merge_sort(arr):
+    if len(arr) > 1:
+        mid = len(arr) // 2
+        L, R = arr[:mid], arr[mid:]
+        merge_sort(L)
+        merge_sort(R)
+        i = j = k = 0
+        while i < len(L) and j < len(R):
+            if L[i] < R[j]:
+                arr[k] = L[i]; i += 1
+            else:
+                arr[k] = R[j]; j += 1
+            k += 1
+        while i < len(L): arr[k] = L[i]; i += 1; k += 1
+        while j < len(R): arr[k] = R[j]; j += 1; k += 1
+# --- Замеры и Построение Графика ---
+sizes = [500, 1000, 2000, 3000, 4000, 5000] # Размеры массивов
+t_bubble = []
+t_merge = []
+for n in sizes:
+    data = [random.randint(0, 10000) for _ in range(n)]
+    
+    # Тест Bubble Sort
+    copy_b = data.copy()
+    start = time.time()
+    bubble_sort(copy_b)
+    t_bubble.append(time.time() - start)
+    # Тест Merge Sort
+    copy_m = data.copy()
+    start = time.time()
+    merge_sort(copy_m)
+    t_merge.append(time.time() - start)
+# --- Визуализация ---
+plt.figure(figsize=(10, 6))
+plt.plot(sizes, t_bubble, label='Bubble Sort (O(n²))', marker='o', color='red')
+plt.plot(sizes, t_merge, label='Merge Sort (O(n log n))', marker='s', color='blue')
+plt.title('Сравнение скорости алгоритмов сортировки')
+plt.xlabel('Размер массива (n)')
+plt.ylabel('Время выполнения (секунды)')
+plt.legend()
+plt.grid(True)
+plt.show() 
